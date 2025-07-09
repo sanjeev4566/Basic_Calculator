@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Scientific Calculator with History</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      background: linear-gradient(45deg, #5ec6ca, #245c71);
+      margin: 0;
+      padding: 20px;
+      color: #fff;
+    }
+
+    .calculator {
+      background: #2d2d2d;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+      width: 320px;
+      max-width: 90vw;
+    }
+
+    .display {
+      width: 100%;
+      height: 60px;
+      font-size: 22px;
+      text-align: right;
+      padding: 10px;
+      border: none;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      background: #444;
+      color: #fff;
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+
+    button {
+      padding: 20px;
+      font-size: 18px;
+      border: none;
+      border-radius: 10px;
+      background: #666;
+      color: white;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    button:hover {
+      background: #888;
+    }
+
+    button.operator {
+      background: #ff9800;
+    }
+
+    button.operator:hover {
+      background: #ffb84d;
+    }
+
+    button.equal {
+      background: #4caf50;
+      grid-column: span 2;
+    }
+
+    button.equal:hover {
+      background: #66bb6a;
+    }
+
+    button.clear {
+      background: #f44336;
+    }
+
+    button.clear:hover {
+      background: #e57373;
+    }
+
+    .history {
+      background: #1e1e1e;
+      margin-top: 20px;
+      padding: 10px;
+      border-radius: 10px;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    .history h3 {
+      margin: 0 0 10px 0;
+      font-size: 18px;
+      text-align: center;
+      border-bottom: 1px solid #555;
+      padding-bottom: 5px;
+    }
+
+    .history p {
+      margin: 5px 0;
+      font-size: 16px;
+      border-bottom: 1px solid #333;
+      padding-bottom: 3px;
+    }
+
+    .history button {
+      width: 100%;
+      margin-top: 10px;
+      background: #f44336;
+    }
+
+    @media(max-width: 400px) {
+      .display {
+        font-size: 18px;
+        height: 50px;
+      }
+
+      button {
+        padding: 15px;
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="calculator">
+    <input type="text" class="display" id="display" disabled />
+    <div class="buttons">
+      <button class="clear" onclick="clearDisplay()">C</button>
+      <button onclick="append('(')">(</button>
+      <button onclick="append(')')">)</button>
+      <button class="operator" onclick="append('/')">÷</button>
+
+      <button onclick="append('7')">7</button>
+      <button onclick="append('8')">8</button>
+      <button onclick="append('9')">9</button>
+      <button class="operator" onclick="append('*')">×</button>
+
+      <button onclick="append('4')">4</button>
+      <button onclick="append('5')">5</button>
+      <button onclick="append('6')">6</button>
+      <button class="operator" onclick="append('-')">−</button>
+
+      <button onclick="append('1')">1</button>
+      <button onclick="append('2')">2</button>
+      <button onclick="append('3')">3</button>
+      <button class="operator" onclick="append('+')">+</button>
+
+      <button onclick="append('0')">0</button>
+      <button onclick="append('.')">.</button>
+      <button class="equal" onclick="calculate()">=</button>
+
+      <button onclick="append('Math.sqrt(')">√</button>
+      <button onclick="append('Math.pow(')">xʸ</button>
+      <button onclick="append('Math.sin(')">sin</button>
+      <button onclick="append('Math.cos(')">cos</button>
+      <button onclick="append('Math.tan(')">tan</button>
+      <button onclick="append('Math.log10(')">log</button>
+    </div>
+
+    <div class="history" id="history">
+      <h3>History</h3>
+      <div id="historyContent"></div>
+      <button onclick="clearHistory()">Clear History</button>
+    </div>
+  </div>
+
+  <script>
+    const display = document.getElementById("display");
+    const historyContent = document.getElementById("historyContent");
+
+    function append(value) {
+      display.value += value;
+    }
+
+    function clearDisplay() {
+      display.value = "";
+    }
+
+    function calculate() {
+      try {
+        let result = eval(display.value);
+        historyContent.innerHTML += `<p>${display.value} = ${result}</p>`;
+        display.value = result;
+      } catch {
+        display.value = "Error";
+      }
+    }
+
+    function clearHistory() {
+      historyContent.innerHTML = "";
+    }
+
+    // Keyboard support
+    document.addEventListener("keydown", function (e) {
+      if (e.key.match(/[0-9+\-*/().]/)) {
+        append(e.key);
+      } else if (e.key === "Enter") {
+        calculate();
+      } else if (e.key === "Backspace") {
+        display.value = display.value.slice(0, -1);
+      } else if (e.key === "c" || e.key === "C") {
+        clearDisplay();
+      }
+    });
+  </script>
+</body>
+</html>
